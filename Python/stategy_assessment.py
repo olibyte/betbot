@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import warnings
+warnings.simplefilter(action='ignore',category=FutureWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import xgboost as xgb
 import seaborn as sns
+import time
 
 ############################### STRATEGY ASSESSMENT ############################
 ### the following functions are used to make the predictions and compute the ROI
@@ -15,16 +18,147 @@ def xgbModelBinary(xtrain,ytrain,xval,yval,p,sample_weights=None):
     Early stopping is performed using xval and yval (validation set).
     Outputs the trained model, and the prediction on the validation set
     """
+    
     if sample_weights==None:
         dtrain=xgb.DMatrix(xtrain,label=ytrain)
     else:
         dtrain=xgb.DMatrix(xtrain,label=ytrain,weight=sample_weights)
     dval=xgb.DMatrix(xval,label=yval)
     eval_set = [(dtrain,"train_loss"),(dval, 'eval')]
-    params={'eval_metric':"logloss","objective":"binary:logistic",'subsample':0.8,
+    params={'eval_metric':"logloss","objective":"binary:logistic",'subsample':p[9],
             'min_child_weight':p[2],'alpha':p[6],'lambda':p[5],'max_depth':int(p[1]),
             'gamma':p[3],'eta':p[0],'colsample_bytree':p[4]}
+    
     model=xgb.train(params, dtrain, int(p[7]),evals=eval_set,early_stopping_rounds=int(p[8]))
+
+    # gridsearch_params = [
+    # (max_depth, min_child_weight)
+    # for max_depth in range(17,23)
+    # for min_child_weight in range(1,2)
+    # ]
+    # min_mae = float("Inf")
+    # best_params = None
+    # for max_depth, min_child_weight in gridsearch_params:
+    #     # print("CV with max_depth={}, min_child_weight={}".format( max_depth,
+    #                         #  min_child_weight)
+    #                         # )
+    #     # Update our parameters
+    #     params['max_depth'] = max_depth
+    #     params['min_child_weight'] = min_child_weight
+    #     # Run CV
+    #     cv_results = xgb.cv(
+    #         params,
+    #         dtrain,
+    #         # num_boost_round=num_boost_round,
+    #         seed=42,
+    #         nfold=5,
+    #         metrics={'mae'},
+    #         early_stopping_rounds=5
+    #     )
+    #     # Update best MAE
+    #     mean_mae = cv_results['test-mae-mean'].min()
+    #     boost_rounds = cv_results['test-mae-mean'].argmin()
+    #     print("\tMAE {} for {} rounds".format(mean_mae, boost_rounds))
+    #     if mean_mae < min_mae:  
+    #         min_mae = mean_mae
+    #         best_params = (max_depth,min_child_weight)
+    #         print("Best params so far: {}, {}, MAE: {}".format(best_params[0], best_params[1], min_mae))
+    # print("Best params FINALLY: {}, {}, MAE: {}".format(best_params[0], best_params[1], min_mae))
+
+
+    # ##############subsample & colsaample
+    # gridsearch_params = [
+    # (subsample, colsample)
+    # for subsample in [i/10. for i in range(8,11)]
+    # for colsample in [i/10. for i in range(8,11)]
+    # ]
+    # min_mae = float("Inf")
+    # best_params = None
+    # # We start by the largest values and go down to the smallest
+    # for subsample, colsample in reversed(gridsearch_params):
+    #     print("CV with subsample={}, colsample={}".format(
+    #                              subsample,
+    #                              colsample))
+    #     # We update our parameters
+    #     params['subsample'] = subsample
+    #     params['colsample_bytree'] = colsample
+    #     # Run CV
+    #     cv_results = xgb.cv(
+    #         params,
+    #         dtrain,
+    #         seed=42,
+    #         nfold=5,
+    #         metrics={'mae'},
+    #         early_stopping_rounds=5
+    #     )
+    #     # Update best score
+    #     mean_mae = cv_results['test-mae-mean'].min()
+    #     # boost_rounds = cv_results['test-mae-mean'].argmin()
+    #     # print("\tMAE {} for {} rounds".format(mean_mae, boost_rounds))
+    #     if mean_mae < min_mae:
+    #         min_mae = mean_mae
+    #         best_params = (subsample,colsample)
+    #         print("Best params so far: {}, {}, MAE: {}".format(best_params[0], best_params[1], min_mae))
+    # print("Best params FINALLY: {}, {}, MAE: {}".format(best_params[0], best_params[1], min_mae))
+
+    # This can take some time…
+    # min_mae = float("Inf")
+    # best_params = None
+    # for eta in [.305,.300,.295]:
+    #     print("CV with eta={}".format(eta))
+    #     # We update our parameters
+    #     params['eta'] = eta
+    #     # Run and time CV
+    #     start = time.time()
+    #     cv_results = xgb.cv(
+    #             params,
+    #             dtrain,
+    #             # num_boost_round=num_boost_round,
+    #             seed=42,
+    #             nfold=5,
+    #             metrics=['mae'],
+    #             early_stopping_rounds=5
+    #           )
+    #     # Update best score
+    #     mean_mae = cv_results['test-mae-mean'].min()
+    #     boost_rounds = cv_results['test-mae-mean'].argmin()
+    #     print("\tMAE {} for {} rounds\n".format(mean_mae, boost_rounds))
+    #     if mean_mae < min_mae:
+    #         min_mae = mean_mae
+    #         best_params = eta
+    #     print("Best params so far: {}, MAE: {}".format(best_params, min_mae))
+    #     finish = (time.time() - start)
+    #     print(finish)
+    # print("Best params FINALLY: {}, MAE: {}".format(best_params, min_mae))
+    # min_mae = float("Inf")
+
+    # for alpha in [1,.1,0.01,0.001,0]:
+    #     print("CV with alpha={}".format(alpha))
+    #     # We update our parameters
+    #     params['alpha'] = alpha
+    #     # Run and time CV
+    #     start = time.time()
+    #     cv_results = xgb.cv(
+    #             params,
+    #             dtrain,
+    #             # num_boost_round=num_boost_round,
+    #             seed=42,
+    #             nfold=5,
+    #             metrics=['mae'],
+    #             early_stopping_rounds=5
+    #           )
+    #     # Update best score
+    #     mean_mae = cv_results['test-mae-mean'].min()
+    #     boost_rounds = cv_results['test-mae-mean'].argmin()
+    #     print("\tMAE {} for {} rounds\n".format(mean_mae, boost_rounds))
+    #     if mean_mae < min_mae:
+    #         min_mae = mean_mae
+    #         best_params = alpha
+    #     print("Best params so far: {}, MAE: {}".format(best_params, min_mae))
+    #     finish = (time.time() - start)
+    #     print(finish)
+    # print("Best alpha params FINALLY: {}, MAE: {}".format(best_params, min_mae))
+
     return model
 
 
@@ -171,7 +305,7 @@ def mer(t):
     if w.sum()>=4:
         return 1,conf[w].mean()
     else:
-        return 0,conf[~w].mean()
+        return 0,conf[~w].mean() 
 
 ############################### PROFITS COMPUTING AND VISUALIZATION ############
 
@@ -201,3 +335,4 @@ def plotProfits(confidence,title=""):
     plt.xlabel("% of matches we bet on")
     plt.ylabel("Return on investment (%)")
     plt.suptitle(title)
+

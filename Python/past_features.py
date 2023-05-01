@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import warnings
+warnings.simplefilter(action='ignore',category=FutureWarning)
 import pandas as pd
 import numpy as np
 import datetime
@@ -74,11 +76,24 @@ def features_recent_creation(outcome,match,past_matches):
     if len(todo)==0:
         return [np.nan]*7
     # Days since last match
-    dslm=(date-todo.iloc[-1,:].Date).days
+    # dslm=(date-todo.iloc[-1,:].Date).days
+
+    todo_sorted = todo.sort_values(by=['Date'], ascending=True)
+    dslm=(date-todo_sorted.iloc[-1,:].Date).days
+ 
+ 
+ 
     # Was the last match won ?
     wlmw=int(todo.iloc[-1,:].Winner==player)
     # Ranking of the last player played
-    rlpp=todo.iloc[-1,:].WRank
+    # rlpp=todo.iloc[-1,:].WRank
+ 
+    if wlmw ==1:
+        rlpp=todo_sorted.iloc[-1,:].LRank
+    else:
+        rlpp=todo_sorted.iloc[-1,:].WRank
+
+
     # Number of sets of last match played
     nslmp=todo.iloc[-1,:]['Best of']
     # Number of sets won during last match played

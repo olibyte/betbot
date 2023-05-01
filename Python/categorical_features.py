@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import warnings
+warnings.simplefilter(action='ignore',category=FutureWarning)
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
@@ -55,6 +57,7 @@ def features_tournaments_encoding(data):
     encod=np.zeros([len(tournaments),len(le.classes_)])
     for i in range(len(tournaments)):
         encod[i,tournaments[i]]+=1
+    print(le.classes_)
     columns=["tournament_"+el for el in le.classes_]
     tournaments_encoded=pd.DataFrame(encod,columns=columns)
     return tournaments_encoded
