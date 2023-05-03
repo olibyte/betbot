@@ -211,7 +211,7 @@ def assessStrategyGlobal(test_beginning_match,
     # players that won the most matches to avoid overfitting and make the process quicker
     # Biggest players :
     biggest_players=data.iloc[range(beg_train,end_train),:][["Winner","Loser"]]
-    biggest_players=pd.concat([biggest_players.Winner,biggest_players.Loser],0)
+    biggest_players=pd.concat([biggest_players.Winner,biggest_players.Loser])
     biggest_players=list(biggest_players.value_counts().index[:nb_players])
     player_columns=[el for el in xtrain.columns if el[:6]=="player"]
     to_drop_players=[el for el in player_columns if el[7:] not in biggest_players]
@@ -290,7 +290,7 @@ def vibratingAssessStrategyGlobal(km,dur_train,duration_val_matches,delta,xgb_pa
                              c.confidence4,c.confidence5,
                              c.confidence6,c.confidence7)))
         c=pd.DataFrame.from_records(list(c.apply(mer)))
-        conf=pd.concat([confTest1[["match","PSW"]],c],1)
+        conf=pd.concat([confTest1[["match","PSW"]],c],axis=1)
         conf.columns=["match","PSW","win0","confidence0"]
     else:
         conf=0

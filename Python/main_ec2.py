@@ -20,8 +20,8 @@ from utilities import *
 
 import glob
 ###################################################### RUN 1 ###################################################################
-filenames=list(glob.glob("Data - Copy/20*.xls*"))
-# filenames=list(glob.glob("Data - Copy/20*.xls*"))
+filenames=list(glob.glob("Data/20*.xls*"))
+# filenames=list(glob.glob("Data/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -34,7 +34,7 @@ for i in no_b365:
     l[i]["B365W"]=np.nan
     l[i]["B365L"]=np.nan
 l=[d[list(d.columns)[:13]+["Wsets","Lsets","Comment"]+["PSW","PSL","B365W","B365L"]] for d in [l[0]]+l[2:]]
-data=pd.concat(l,0)
+data=pd.concat(l)
 
 ### Data cleaning
 data=data.sort_values("Date")
@@ -52,10 +52,10 @@ data=data.reset_index(drop=True)
 ### Elo rankings data
 # Computing of the elo ranking of each player at the beginning of each match.
 elo_rankings = compute_elo_rankings(data)
-data = pd.concat([data,elo_rankings],1)
+data = pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
+data.to_csv("Generated Data/atp_data.csv",index=False)
 
 
 
@@ -63,7 +63,7 @@ data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data - Copy/atp_data.csv")
+data=pd.read_csv("Generated Data/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -101,7 +101,7 @@ features_categorical = data[["Series","Court","Surface","Round","Best of","Tourn
 features_categorical_encoded = categorical_features_encoding(features_categorical)
 players_encoded = features_players_encoding(data)
 tournaments_encoded = features_tournaments_encoding(data)
-features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],1)
+features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],axis=1)
 
 
 ############################### Duplication of rows ############################
@@ -137,10 +137,10 @@ features = pd.concat([
                   features_general,
                   features_recent
                   ]
-                  ,1
+                  ,axis=1
                   )
 
-features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
+features.to_csv("Generated Data/atp_data_features.csv",index=False)
 
 
 
@@ -155,7 +155,7 @@ features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
 ## validation (the consecutive matches right before the testing matches)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data - Copy/atp_data_features.csv")
+features=pd.read_csv("Generated Data/atp_data_features.csv")
 
 
 start_date=datetime.datetime(2012,1,1) #first day of testing set
@@ -192,7 +192,7 @@ for start in key_matches:
     conf=vibratingAssessStrategyGlobal(start,10400,duration_val_matches,duration_test_matches,xgb_params,nb_players,nb_tournaments,features,data)
     confs.append(conf)
 confs=[el for el in confs if type(el)!=int]
-conf=pd.concat(confs,0)
+conf=pd.concat(confs)
 ## We add the date to the confidence dataset (can be useful for analysis later)
 dates=data.Date.reset_index()
 dates.columns=["match","date"]
@@ -206,12 +206,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data - Copy/confidence_data.csv",index=False)
+conf.to_csv("Generated Data/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-data.to_csv(f'output/conf_m/atp_data-m-4-barcelona-q-munich-q-0.csv',index=False)
-conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-0.csv',index=False)
+data.to_csv(f'output/conf_m/atp_data-m-2023-madrid-r5-0.csv',index=False)
+conf.to_csv(f'output/conf_m/confidence_data-m-2023-madrid-r5-0.csv',index=False)
 
 ################################################################ END RUN 1 ############################
 
@@ -220,8 +220,8 @@ conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-0.csv',inde
 
 ############################################################ RUN 2 ####################################
 
-filenames=list(glob.glob("Data - Copy/20*.xls*"))
-# filenames=list(glob.glob("Data - Copy/20*.xls*"))
+filenames=list(glob.glob("Data/20*.xls*"))
+# filenames=list(glob.glob("Data/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -234,7 +234,7 @@ for i in no_b365:
     l[i]["B365W"]=np.nan
     l[i]["B365L"]=np.nan
 l=[d[list(d.columns)[:13]+["Wsets","Lsets","Comment"]+["PSW","PSL","B365W","B365L"]] for d in [l[0]]+l[2:]]
-data=pd.concat(l,0)
+data=pd.concat(l)
 
 ### Data cleaning
 data=data.sort_values("Date")
@@ -252,10 +252,10 @@ data=data.reset_index(drop=True)
 ### Elo rankings data
 # Computing of the elo ranking of each player at the beginning of each match.
 elo_rankings = compute_elo_rankings(data)
-data = pd.concat([data,elo_rankings],1)
+data = pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
+data.to_csv("Generated Data/atp_data.csv",index=False)
 
 
 
@@ -263,7 +263,7 @@ data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data - Copy/atp_data.csv")
+data=pd.read_csv("Generated Data/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -301,7 +301,7 @@ features_categorical = data[["Series","Court","Surface","Round","Best of","Tourn
 features_categorical_encoded = categorical_features_encoding(features_categorical)
 players_encoded = features_players_encoding(data)
 tournaments_encoded = features_tournaments_encoding(data)
-features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],1)
+features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],axis=1)
 
 
 ############################### Duplication of rows ############################
@@ -337,10 +337,10 @@ features = pd.concat([
                   features_general,
                   features_recent
                   ]
-                  ,1
+                  ,axis=1
                   )
 
-features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
+features.to_csv("Generated Data/atp_data_features.csv",index=False)
 
 
 
@@ -355,7 +355,7 @@ features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
 ## validation (the consecutive matches right before the testing matches)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data - Copy/atp_data_features.csv")
+features=pd.read_csv("Generated Data/atp_data_features.csv")
 
 start_date=datetime.datetime(2017,1,1) #first day of testing set
 print(start_date)
@@ -392,7 +392,7 @@ for start in key_matches:
     conf=vibratingAssessStrategyGlobal(start,8000,duration_val_matches,duration_test_matches,xgb_params,nb_players,nb_tournaments,features,data)
     confs.append(conf)
 confs=[el for el in confs if type(el)!=int]
-conf=pd.concat(confs,0)
+conf=pd.concat(confs)
 ## We add the date to the confidence dataset (can be useful for analysis later)
 dates=data.Date.reset_index()
 dates.columns=["match","date"]
@@ -407,12 +407,12 @@ conf=conf.reset_index(drop=True)
 
 
 ## We store this dataset
-conf.to_csv("Generated Data - Copy/confidence_data.csv",index=False)
+conf.to_csv("Generated Data/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-1.csv',index=False)
-# data.to_csv(f'output/conf_m/atp_data-m-4-barcelona-q-munich-q-1.csv',index=False)
+conf.to_csv(f'output/conf_m/confidence_data-m-2023-madrid-r5-1.csv',index=False)
+# data.to_csv(f'output/conf_m/atp_data-m-2023-madrid-r5-1.csv',index=False)
 
 ########################## END RUN 2 ##########################
 
@@ -425,8 +425,8 @@ conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-1.csv',inde
 
 # #################################################################### RUN 3 ##################################################
 
-filenames=list(glob.glob("Data - Copy/20*.xls*"))
-# filenames=list(glob.glob("Data - Copy/20*.xls*"))
+filenames=list(glob.glob("Data/20*.xls*"))
+# filenames=list(glob.glob("Data/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -439,7 +439,7 @@ for i in no_b365:
     l[i]["B365W"]=np.nan
     l[i]["B365L"]=np.nan
 l=[d[list(d.columns)[:13]+["Wsets","Lsets","Comment"]+["PSW","PSL","B365W","B365L"]] for d in [l[0]]+l[2:]]
-data=pd.concat(l,0)
+data=pd.concat(l)
 
 ### Data cleaning
 data=data.sort_values("Date")
@@ -457,10 +457,10 @@ data=data.reset_index(drop=True)
 ### Elo rankings data
 # Computing of the elo ranking of each player at the beginning of each match.
 elo_rankings = compute_elo_rankings(data)
-data = pd.concat([data,elo_rankings],1)
+data = pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
+data.to_csv("Generated Data/atp_data.csv",index=False)
 
 
 
@@ -468,7 +468,7 @@ data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data - Copy/atp_data.csv")
+data=pd.read_csv("Generated Data/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -506,7 +506,7 @@ features_categorical = data[["Series","Court","Surface","Round","Best of","Tourn
 features_categorical_encoded = categorical_features_encoding(features_categorical)
 players_encoded = features_players_encoding(data)
 tournaments_encoded = features_tournaments_encoding(data)
-features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],1)
+features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],axis=1)
 
 
 ############################### Duplication of rows ############################
@@ -542,10 +542,10 @@ features = pd.concat([
                   features_general,
                   features_recent
                   ]
-                  ,1
+                  ,axis=1
                   )
 
-features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
+features.to_csv("Generated Data/atp_data_features.csv",index=False)
 
 
 
@@ -560,7 +560,7 @@ features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
 ## validation (the consecutive matches right before the testing matches)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data - Copy/atp_data_features.csv")
+features=pd.read_csv("Generated Data/atp_data_features.csv")
 
 start_date=datetime.datetime(2013,1,1) #first day of testing set
 print(start_date)
@@ -596,7 +596,7 @@ for start in key_matches:
     conf=vibratingAssessStrategyGlobal(start,10400,duration_val_matches,duration_test_matches,xgb_params,nb_players,nb_tournaments,features,data)
     confs.append(conf)
 confs=[el for el in confs if type(el)!=int]
-conf=pd.concat(confs,0)
+conf=pd.concat(confs)
 ## We add the date to the confidence dataset (can be useful for analysis later)
 dates=data.Date.reset_index()
 dates.columns=["match","date"]
@@ -610,12 +610,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data - Copy/confidence_data.csv",index=False)
+conf.to_csv("Generated Data/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-2.csv',index=False)
-# data.to_csv(f'output/conf_m/atp_data-m-4-barcelona-q-munich-q-2.csv',index=False)
+conf.to_csv(f'output/conf_m/confidence_data-m-2023-madrid-r5-2.csv',index=False)
+# data.to_csv(f'output/conf_m/atp_data-m-2023-madrid-r5-2.csv',index=False)
 
 #################################################### END RUN 3 ##########################################################
 
@@ -623,8 +623,8 @@ conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-2.csv',inde
 
 ############################################################################## RUN 4 ##########################
 
-filenames=list(glob.glob("Data - Copy/20*.xls*"))
-# filenames=list(glob.glob("Data - Copy/20*.xls*"))
+filenames=list(glob.glob("Data/20*.xls*"))
+# filenames=list(glob.glob("Data/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -637,7 +637,7 @@ for i in no_b365:
     l[i]["B365W"]=np.nan
     l[i]["B365L"]=np.nan
 l=[d[list(d.columns)[:13]+["Wsets","Lsets","Comment"]+["PSW","PSL","B365W","B365L"]] for d in [l[0]]+l[2:]]
-data=pd.concat(l,0)
+data=pd.concat(l)
 
 ### Data cleaning
 data=data.sort_values("Date")
@@ -655,10 +655,10 @@ data=data.reset_index(drop=True)
 ### Elo rankings data
 # Computing of the elo ranking of each player at the beginning of each match.
 elo_rankings = compute_elo_rankings(data)
-data = pd.concat([data,elo_rankings],1)
+data = pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
+data.to_csv("Generated Data/atp_data.csv",index=False)
 
 
 
@@ -666,7 +666,7 @@ data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data - Copy/atp_data.csv")
+data=pd.read_csv("Generated Data/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -704,7 +704,7 @@ features_categorical = data[["Series","Court","Surface","Round","Best of","Tourn
 features_categorical_encoded = categorical_features_encoding(features_categorical)
 players_encoded = features_players_encoding(data)
 tournaments_encoded = features_tournaments_encoding(data)
-features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],1)
+features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],axis=1)
 
 
 ############################### Duplication of rows ############################
@@ -740,10 +740,10 @@ features = pd.concat([
                   features_general,
                   features_recent
                   ]
-                  ,1
+                  ,axis=1
                   )
 
-features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
+features.to_csv("Generated Data/atp_data_features.csv",index=False)
 
 
 
@@ -758,7 +758,7 @@ features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
 ## validation (the consecutive matches right before the testing matches)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data - Copy/atp_data_features.csv")
+features=pd.read_csv("Generated Data/atp_data_features.csv")
 
 start_date=datetime.datetime(2017,1,1) #first day of testing set
 print(start_date)
@@ -794,7 +794,7 @@ for start in key_matches:
     conf=vibratingAssessStrategyGlobal(start,8500,duration_val_matches,duration_test_matches,xgb_params,nb_players,nb_tournaments,features,data)
     confs.append(conf)
 confs=[el for el in confs if type(el)!=int]
-conf=pd.concat(confs,0)
+conf=pd.concat(confs)
 ## We add the date to the confidence dataset (can be useful for analysis later)
 dates=data.Date.reset_index()
 dates.columns=["match","date"]
@@ -808,12 +808,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data - Copy/confidence_data.csv",index=False)
+conf.to_csv("Generated Data/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-3.csv',index=False)
-# data.to_csv(f'output/conf_m/atp_data-m-4-barcelona-q-munich-q-3.csv',index=False)
+conf.to_csv(f'output/conf_m/confidence_data-m-2023-madrid-r5-3.csv',index=False)
+# data.to_csv(f'output/conf_m/atp_data-m-2023-madrid-r5-3.csv',index=False)
 
 ########################################################################################### END RUN 4 ############################################################
 
@@ -821,8 +821,8 @@ conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-3.csv',inde
 #####################################################################################################RUN 5 ##################################################3
 
 
-filenames=list(glob.glob("Data - Copy/20*.xls*"))
-# filenames=list(glob.glob("Data - Copy/20*.xls*"))
+filenames=list(glob.glob("Data/20*.xls*"))
+# filenames=list(glob.glob("Data/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -835,7 +835,7 @@ for i in no_b365:
     l[i]["B365W"]=np.nan
     l[i]["B365L"]=np.nan
 l=[d[list(d.columns)[:13]+["Wsets","Lsets","Comment"]+["PSW","PSL","B365W","B365L"]] for d in [l[0]]+l[2:]]
-data=pd.concat(l,0)
+data=pd.concat(l)
 
 ### Data cleaning
 data=data.sort_values("Date")
@@ -853,10 +853,10 @@ data=data.reset_index(drop=True)
 ### Elo rankings data
 # Computing of the elo ranking of each player at the beginning of each match.
 elo_rankings = compute_elo_rankings(data)
-data = pd.concat([data,elo_rankings],1)
+data = pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
+data.to_csv("Generated Data/atp_data.csv",index=False)
 
 
 
@@ -864,7 +864,7 @@ data.to_csv("Generated Data - Copy/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data - Copy/atp_data.csv")
+data=pd.read_csv("Generated Data/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -902,7 +902,7 @@ features_categorical = data[["Series","Court","Surface","Round","Best of","Tourn
 features_categorical_encoded = categorical_features_encoding(features_categorical)
 players_encoded = features_players_encoding(data)
 tournaments_encoded = features_tournaments_encoding(data)
-features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],1)
+features_onehot = pd.concat([features_categorical_encoded,players_encoded,tournaments_encoded],axis=1)
 
 
 ############################### Duplication of rows ############################
@@ -938,10 +938,10 @@ features = pd.concat([
                   features_general,
                   features_recent
                   ]
-                  ,1
+                  ,axis=1
                   )
 
-features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
+features.to_csv("Generated Data/atp_data_features.csv",index=False)
 
 
 
@@ -956,7 +956,7 @@ features.to_csv("Generated Data - Copy/atp_data_features.csv",index=False)
 ## validation (the consecutive matches right before the testing matches)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data - Copy/atp_data_features.csv")
+features=pd.read_csv("Generated Data/atp_data_features.csv")
 
 start_date=datetime.datetime(2014,1,1) #first day of testing set
 print(start_date)
@@ -992,7 +992,7 @@ for start in key_matches:
     conf=vibratingAssessStrategyGlobal(start,10400,duration_val_matches,duration_test_matches,xgb_params,nb_players,nb_tournaments,features,data)
     confs.append(conf)
 confs=[el for el in confs if type(el)!=int]
-conf=pd.concat(confs,0)
+conf=pd.concat(confs)
 ## We add the date to the confidence dataset (can be useful for analysis later)
 dates=data.Date.reset_index()
 dates.columns=["match","date"]
@@ -1006,12 +1006,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data - Copy/confidence_data.csv",index=False)
+conf.to_csv("Generated Data/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_m/confidence_data-m-4-barcelona-q-munich-q-4.csv',index=False)
-# data.to_csv(f'output/conf_m/atp_data-m-4-barcelona-q-munich-q-4.csv',index=False)
+conf.to_csv(f'output/conf_m/confidence_data-m-2023-madrid-r5-4.csv',index=False)
+# data.to_csv(f'output/conf_m/atp_data-m-2023-madrid-r5-4.csv',index=False)
 
 ######################################################################################### END RUN 5 ###################################################################
 ## Plot of ROI according to the % of matches we bet on
