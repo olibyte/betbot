@@ -23,7 +23,7 @@ import glob
 ################################################################################
 ############################### RUN 1 ############################################
 ###########################################################################################################################
-filenames=list(glob.glob("Data_F/20*.xls*"))
+filenames=list(glob.glob("../Data_F/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -57,7 +57,7 @@ elo_rankings = compute_elo_rankings(data)
 data=pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data_F/atp_data.csv",index=False)
+data.to_csv("../Generated Data_F/atp_data.csv",index=False)
 
 
 
@@ -65,7 +65,7 @@ data.to_csv("Generated Data_F/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data_F/atp_data.csv")
+data=pd.read_csv("../Generated Data_F/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -131,11 +131,11 @@ features = pd.concat([features_odds,
                   features_general,
                   features_recent],axis=1)
 
-features.to_csv("Generated Data_F/atp_data_features.csv",index=False)
+features.to_csv("../Generated Data_F/atp_data_features.csv",index=False)
 
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data_F/atp_data_features.csv")
+features=pd.read_csv("../Generated Data_F/atp_data_features.csv")
 
 ########################## RUN 1 ##########################
 start_date=datetime.datetime(2012,1,1) #first day of testing set
@@ -186,12 +186,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data_F/confidence_data.csv",index=False)
+conf.to_csv("../Generated Data_F/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-data.to_csv(f'output/conf_f/atp_data-f-2023-madrid-r5-0.csv',index=False)
-conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-0.csv',index=False)
+data.to_csv(f'../output/conf_f/atp_data-f-2023-madrid-r5-0.csv',index=False)
+conf.to_csv(f'../output/conf_f/confidence_data-f-2023-madrid-r5-0.csv',index=False)
 
 ########################################################### end run 1 ########################################################################
 
@@ -199,7 +199,7 @@ conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-0.csv',index=False)
 
 ########################### RUN 2 #######################
 
-filenames=list(glob.glob("Data_F/20*.xls*"))
+filenames=list(glob.glob("../Data_F/20*.xls*"))
 l = [pd.read_excel(filename) for filename in filenames]
 no_b365=[i for i,d in enumerate(l) if "B365W" not in l[i].columns]
 no_pi=[i for i,d in enumerate(l) if "PSW" not in l[i].columns]
@@ -231,7 +231,7 @@ elo_rankings = compute_elo_rankings(data)
 data=pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data_F/atp_data.csv",index=False)
+data.to_csv("../Generated Data_F/atp_data.csv",index=False)
 
 
 
@@ -239,7 +239,7 @@ data.to_csv("Generated Data_F/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data_F/atp_data.csv")
+data=pd.read_csv("../Generated Data_F/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -312,11 +312,11 @@ features = pd.concat([features_odds,
                   features_general,
                   features_recent],axis=1)
 
-features.to_csv("Generated Data_F/atp_data_features.csv",index=False)
+features.to_csv("../Generated Data_F/atp_data_features.csv",index=False)
 
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data_F/atp_data_features.csv")
+features=pd.read_csv("../Generated Data_F/atp_data_features.csv")
 
 
 start_date=datetime.datetime(2017,1,1) #first day of testing set
@@ -367,19 +367,19 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data_F/confidence_data.csv",index=False)
+conf.to_csv("../Generated Data_F/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-1.csv',index=False)
-# data.to_csv(f'output/conf_f/atp_data-f-2023-madrid-r5-1.csv',index=False)
+conf.to_csv(f'../output/conf_f/confidence_data-f-2023-madrid-r5-1.csv',index=False)
+# data.to_csv(f'../output/conf_f/atp_data-f-2023-madrid-r5-1.csv',index=False)
 
 ######################### end run 2 ##########################
 
 
 ######################################## RUN 3 #########################################
 
-filenames=list(glob.glob("Data_F/20*.xls*"))
+filenames=list(glob.glob("../Data_F/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -413,10 +413,10 @@ elo_rankings = compute_elo_rankings(data)
 data=pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data_F/atp_data.csv",index=False)
+data.to_csv("../Generated Data_F/atp_data.csv",index=False)
 
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data_F/atp_data.csv")
+data=pd.read_csv("../Generated Data_F/atp_data.csv")
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
@@ -481,11 +481,11 @@ features = pd.concat([features_odds,
                   features_general,
                   features_recent],axis=1)
 
-features.to_csv("Generated Data_F/atp_data_features.csv",index=False)
+features.to_csv("../Generated Data_F/atp_data_features.csv",index=False)
 
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data_F/atp_data_features.csv")
+features=pd.read_csv("../Generated Data_F/atp_data_features.csv")
 
 # ########################## RUN 3 ##########################
 start_date=datetime.datetime(2013,1,1) #first day of testing set
@@ -536,19 +536,19 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data_F/confidence_data.csv",index=False)
+conf.to_csv("../Generated Data_F/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-2.csv',index=False)
-# data.to_csv(f'output/conf_f/atp_data-f-2023-madrid-r5-2.csv',index=False)
+conf.to_csv(f'../output/conf_f/confidence_data-f-2023-madrid-r5-2.csv',index=False)
+# data.to_csv(f'../output/conf_f/atp_data-f-2023-madrid-r5-2.csv',index=False)
 
 ############################################################################## END RUN 3 #######################
 
 
 
 ############################################################################## run 4 ###################################
-filenames=list(glob.glob("Data_F/20*.xls*"))
+filenames=list(glob.glob("../Data_F/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -582,13 +582,13 @@ elo_rankings = compute_elo_rankings(data)
 data=pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data_F/atp_data.csv",index=False)
+data.to_csv("../Generated Data_F/atp_data.csv",index=False)
 
 ################################################################################
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data_F/atp_data.csv")
+data=pd.read_csv("../Generated Data_F/atp_data.csv")
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
 
@@ -654,11 +654,11 @@ features = pd.concat([features_odds,
                   features_general,
                   features_recent],axis=1)
 
-features.to_csv("Generated Data_F/atp_data_features.csv",index=False)
+features.to_csv("../Generated Data_F/atp_data_features.csv",index=False)
 
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data_F/atp_data_features.csv")
+features=pd.read_csv("../Generated Data_F/atp_data_features.csv")
 
 
 # ########################## RUN 4 ##########################
@@ -710,12 +710,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data_F/confidence_data.csv",index=False)
+conf.to_csv("../Generated Data_F/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-3.csv',index=False)
-# data.to_csv(f'output/conf_f/atp_data-f-2023-madrid-r5-3.csv',index=False)
+conf.to_csv(f'../output/conf_f/confidence_data-f-2023-madrid-r5-3.csv',index=False)
+# data.to_csv(f'../output/conf_f/atp_data-f-2023-madrid-r5-3.csv',index=False)
 
 ################################################################################# end run 4 ##############################
 
@@ -723,7 +723,7 @@ conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-3.csv',index=False)
 
 
 ##################################################################################### RUN 5 #######################
-filenames=list(glob.glob("Data_F/20*.xls*"))
+filenames=list(glob.glob("../Data_F/20*.xls*"))
 # print(filenames)
 # l = [pd.read_excel(filename,encoding='latin-1') for filename in filenames]
 l = [pd.read_excel(filename) for filename in filenames]
@@ -757,7 +757,7 @@ elo_rankings = compute_elo_rankings(data)
 data=pd.concat([data,elo_rankings],axis=1)
 
 ### Storage of the raw dataset
-data.to_csv("Generated Data_F/atp_data.csv",index=False)
+data.to_csv("../Generated Data_F/atp_data.csv",index=False)
 
 
 
@@ -765,7 +765,7 @@ data.to_csv("Generated Data_F/atp_data.csv",index=False)
 ######################## Building training set #################################
 ################################################################################
 ### We'll add some features to the dataset
-data=pd.read_csv("Generated Data_F/atp_data.csv")
+data=pd.read_csv("../Generated Data_F/atp_data.csv")
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
 
@@ -832,10 +832,10 @@ features = pd.concat([features_odds,
                   features_general,
                   features_recent],axis=1)
 
-features.to_csv("Generated Data_F/atp_data_features.csv",index=False)
+features.to_csv("../Generated Data_F/atp_data_features.csv",index=False)
 
 ######################### Confidence computing for each match ############################
-features=pd.read_csv("Generated Data_F/atp_data_features.csv")
+features=pd.read_csv("../Generated Data_F/atp_data_features.csv")
 
 # ########################## RUN 5 ##########################
 start_date=datetime.datetime(2014,1,1) #first day of testing set
@@ -886,12 +886,12 @@ conf=conf.sort_values("confidence0",ascending=False)
 conf=conf.reset_index(drop=True)
 
 ## We store this dataset
-conf.to_csv("Generated Data_F/confidence_data.csv",index=False)
+conf.to_csv("../Generated Data_F/confidence_data.csv",index=False)
 
 stamp = datetime.datetime.now()
 stamp_string = stamp.strftime('%M-%D')
-conf.to_csv(f'output/conf_f/confidence_data-f-2023-madrid-r5-4.csv',index=False)
-# data.to_csv(f'output/conf_f/atp_data-f-2023-madrid-r5-4.csv',index=False)
+conf.to_csv(f'../output/conf_f/confidence_data-f-2023-madrid-r5-4.csv',index=False)
+# data.to_csv(f'../output/conf_f/atp_data-f-2023-madrid-r5-4.csv',index=False)
 
 
 
