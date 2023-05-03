@@ -121,7 +121,7 @@ def features_duo_creation(outcome,match,past):
     features_duo+=[len(duo),len(duo1),len(duo2)]
     per_victory_player1=100*len(duo1)/len(duo) if len(duo)>0 else np.nan
     features_duo.append(per_victory_player1)
-    return features_duos
+    return features_duo
 
 def features_general_creation(outcome,match,past_matches):
     features_general=[]
