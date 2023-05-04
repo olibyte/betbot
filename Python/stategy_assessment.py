@@ -221,9 +221,9 @@ def assessStrategyGlobal(test_beginning_match,
     tournament_columns=[el for el in xtrain.columns if el[:10]=="tournament"]
     to_drop_tournaments=[el for el in tournament_columns if el[11:] not in biggest_tournaments]
     # We drop smallest Tournaments and players
-    xtrain=xtrain.drop(to_drop_players+to_drop_tournaments,1)
-    xval=xval.drop(to_drop_players+to_drop_tournaments,1)
-    xtest=xtest.drop(to_drop_players+to_drop_tournaments,1)
+    xtrain=xtrain.drop(to_drop_players+to_drop_tournaments,axis=1)
+    xval=xval.drop(to_drop_players+to_drop_tournaments,axis=1)
+    xtest=xtest.drop(to_drop_players+to_drop_tournaments,axis=1)
     
     ### ML model training
     model=xgbModelBinary(xtrain,ytrain,xval,yval,xgb_params,sample_weights=None)

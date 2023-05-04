@@ -36,7 +36,7 @@ def features_past_generation(features_creation_function,
         match_features_outcome_2=features_creation_function(2,match,past_matches)
         matches_outcomes.append(match_features_outcome_1)
         matches_outcomes.append(match_features_outcome_2)
-        if i%1000==0:
+        if i%5000==0:
             print(str(i)+"/"+str(len(indices))+" matches treated.")
     train=pd.DataFrame(matches_outcomes)
     train.columns=[feature_names_prefix+str(i) for i in range(len(train.columns))]
