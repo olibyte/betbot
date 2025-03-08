@@ -1,0 +1,11 @@
+pandas
+numpy
+seaborn
+matplotlib
+xgboost
+scikit-learn
+datetime
+openpyxl
+xlrd
+beautifulsoup4
+requests

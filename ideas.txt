@@ -1,0 +1,61 @@
+move hardcoded values to config.py
+validate elo calculation
+broaden tournament and player scope
+
+gridsearchcv for xgb params. be sure to explore the ranges of params in the grid..
+
+Input:
+round 1:
+param_grid = {
+    'max_depth': [3,4,5],
+    'learning_rate': [0.1,0.01,0.05],
+    'gamma': [0, 0.25, 1.0],
+    'reg_lambda': [0, 1.0, 10.0],
+    'scale_pos_weight': [1,3,5]
+}
+Output:
+max_depth: 4, ,learning_rate: 0.1, gamma:0.25, reg_lambda: 10, scale_pos_weight: 3
+Note how max_depth, gamma, and scale_pos_weight were in the middle of the range.
+learning rate and reg_lambda were at the extremes, so
+we should run a second round of gridsearchcv with more extreme values to explore the ranges.
+
+round 2:
+param_grid = {
+    'max_depth': [4],
+    'learning_rate': [0.1,0.5,1],
+    'gamma': [0.25],
+    'reg_lambda': [10.0, 20, 100],
+    'scale_pos_weight': [3]
+}
+Output:
+max_depth: 4, learning_rate: 0.1, reg_lambda: 10
+Note: to speed up cross-validation, and to prevent overfitting,
+use a random subset of the data (e.g. 90%) and only use random subset of features (columns) e.g. (50% per tree)
+subsample: 0.9, colsample_bytree: 0.5
+n_estimators: build 1 tree to begin with, so we can get a sense of the performance of the model.
+
+
+Categorical Features:
+
+Surface: Represents the type of court surface (e.g., 'Hard', 'Clay', 'Grass').​
+Round: Indicates the stage of the tournament (e.g., 'First Round', 'Quarterfinal', 'Final').​
+Best of: Specifies the maximum number of sets in the match (e.g., 3, 5).​
+Winner: Name or identifier of the winning player.​
+Loser: Name or identifier of the losing player.​
+Comment: Contains match-specific notes or observations.​
+Converting these columns to categorical data types can improve memory efficiency and performance in analyses.
+
+Ordinal Categorical Columns:
+
+Round: If the 'Round' column has a natural order (e.g., 'First Round' < 'Quarterfinal' < 'Final'), it can be treated as an ordinal categorical variable.​
+Best of: While numerical, it represents discrete categories and can be treated as ordinal if there's a meaningful order.​
+Numerical Columns:
+
+Date: Represents the date of the match; typically stored as a datetime object.​
+WRank, LRank: Rankings of the winner and loser, respectively.​
+WPts, LPts: Points of the winner and loser, respectively.​
+Wsets, Lsets: Number of sets won by the winner and loser, respectively.​
+PSW, PSL: Probabilities or predictions related to the winner and loser.​
+elo_winner, elo_loser: Elo ratings of the winner and loser.​
+proba_elo: Probability derived from Elo ratings.​
+These columns are numerical and should remain as such for quantitative analyses.
