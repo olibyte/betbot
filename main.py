@@ -60,6 +60,7 @@ else:
 ### We'll add some features to the dataset
 data=pd.read_csv(ATP_DATA_PATH)
 # data.Date = data.Date.apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
+print(x)
 data.Date = data.Date.apply(lambda x:datetime.datetime.strptime(x, '%Y-%m-%d'))
 
 
