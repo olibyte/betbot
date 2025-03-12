@@ -9,3 +9,5 @@ openpyxl
 xlrd
 beautifulsoup4
 requests
+jupyter
+notebook
